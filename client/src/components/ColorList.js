@@ -87,3 +87,4 @@ const ColorList = ({ colors, updateColors }) => {
 };
 
 export default ColorList;
+
