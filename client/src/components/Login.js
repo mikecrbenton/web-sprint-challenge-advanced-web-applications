@@ -17,7 +17,7 @@ const Login = () => {
      }
   )
   const  handleChange = (e) => {
-     e.persist();
+   e.persist();
    setLogin( 
       { ...login, [e.target.name]: e.target.value } );
  };
@@ -25,7 +25,7 @@ const Login = () => {
  const handleSubmit = (e) => {
    e.preventDefault();
    // Make a POST request and send the credentials object to the api
-   console.log("LOGIN", login);
+   //console.log("LOGIN", login);
    axiosWithAuth()        // sending to api
      .post("/api/login", login)
      .then((res) => {             // protected route looking for "token"

@@ -12,10 +12,36 @@ const ColorList = ({ colors, updateColors }) => {
   const [editing, setEditing] = useState(false);
   const [colorToEdit, setColorToEdit] = useState(initialColor);
 
+  const [add, setAdd] = useState(false);
+  const [colorToAdd, setColorToAdd] = useState(initialColor);
+
   const editColor = color => {
     setEditing(true);
     setColorToEdit(color);
   };
+
+  const addColor = () => {
+     //console.log("in add color")
+    setAdd(true);
+     //console.log(add)
+    setColorToAdd(initialColor);
+}
+
+ 
+  // ADD =========================================================================
+   const saveAdd = e => {
+      e.preventDefault();
+
+      axiosWithAuth().post(`/api/colors/`,colorToAdd)
+      .then((res) => {  
+            //console.log(res.data)
+         updateColors(res.data)
+      })
+      .catch((err) => console.log(err));
+
+      setAdd(false);
+
+   };
 
   // PUT - EDIT====================================================================
   const saveEdit = e => {
@@ -35,6 +61,8 @@ const ColorList = ({ colors, updateColors }) => {
             updateColors( newStateArray )
          })
          .catch((err) => console.log(err));
+
+         setEditing(false);
   };
 
   // DELETE ========================================================================
@@ -65,6 +93,7 @@ const ColorList = ({ colors, updateColors }) => {
             onClick={() => editColor(color)}
            >
             <span>
+
               <span className="delete" onClick={e => {
                     e.stopPropagation();
                     deleteColor(color)
@@ -83,6 +112,11 @@ const ColorList = ({ colors, updateColors }) => {
           </li>
         ))}
       </ul>
+      
+      <button className="delete" onClick={e => {
+                    e.stopPropagation();
+                    addColor()
+                    } }>ADD</button>
 
       {editing && (
         <form onSubmit={saveEdit}>
@@ -114,9 +148,40 @@ const ColorList = ({ colors, updateColors }) => {
           </div>
         </form>
       )}
+      
+      {add && (
+        <form onSubmit={saveAdd}>
+          <legend>add color</legend>
+          <label>
+            color name:
+            <input
+              onChange={e =>
+                setColorToAdd({ ...colorToAdd, color: e.target.value })
+              }
+              value={colorToAdd.color}
+            />
+          </label>
+          <label>
+            hex code:
+            <input
+              onChange={e =>
+                setColorToAdd({
+                  ...colorToAdd,
+                  code: { hex: e.target.value }
+                })
+              }
+              value={colorToAdd.code.hex}
+            />
+          </label>
+          <div className="button-row">
+            <button type="submit">save</button>
+            <button onClick={() => setAdd(false)}>cancel</button>
+          </div>
+        </form>
+      )}
 
       <div className="spacer" />
-      {/* stretch - build another form here to add a color */}
+     
     </div>
   );
 };

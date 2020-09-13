@@ -1,10 +1,10 @@
 import React from "react";
-import { render, screen, wait } from "@testing-library/react";
+import { render, screen, wait, waitFor, fireEvent } from "@testing-library/react";
 import BubblePage from "./BubblePage";
 import { getColors as mockGetColors } from '../api/getColors'
 
 jest.mock("../api/getColors");
-console.log("mock get colors",mockGetColors)
+//console.log("mock get colors",mockGetColors)
 
 const colorArray =[
    [
@@ -88,16 +88,36 @@ const colorArray =[
     ]
   ];
 
+// THE COMPONENT SHELLS RENDER CORRECTLY
+test("BubblePage renders properly", ()=> {
+   const { queryByText } = render( <BubblePage /> );
+
+   expect( queryByText(/bubbles/i)).toBeInTheDocument() ;
+   expect( queryByText(/colors/i)).toBeInTheDocument() ;
+})
+
+// THE DATA IS NOT SHOWING UP
 test("Fetches data and renders the bubbles", async () => {
   // Finish this test
   mockGetColors.mockResolvedValueOnce(colorArray);
-   console.log(colorArray)
-  const { 
-     getByTestId, 
-     getAllByTestId,
-     queryByTestId } = render(<BubblePage/> );
+  
+  const { getByTestId, getByText } = render( <BubblePage/> );
+
+  await waitFor(() => {
+      getByText(/aliceblue/i);
+  });
 
   await wait();
-  console.log("BUBBLE PAGE",<BubblePage/>)
-   //expect( getByTestId(/aliceblue/i) ).toBeInTheDocument
+  
+  const domArray = [
+     "aliceblue","limegreen","aqua","aquamaring","lilac",
+     "softpink","bisque","softyellow","blanchedalmond",
+     "blue","blueviolet"]
+     
+      domArray.forEach( (color) => {
+      expect( getByTestId(color) ).toBeInTheDocument(); 
+   })  
+
+   fireEvent.click( getByText(/aliceblue/i));
+      expect( getByText(/edit color/i) ).toBeInTheDocument();
 });
