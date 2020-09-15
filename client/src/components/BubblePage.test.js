@@ -96,6 +96,7 @@ test("BubblePage renders properly", ()=> {
    expect( queryByText(/colors/i)).toBeInTheDocument() ;
 })
 
+
 // THE DATA IS NOT SHOWING UP
 test("Fetches data and renders the bubbles", async () => {
   // Finish this test
@@ -103,21 +104,23 @@ test("Fetches data and renders the bubbles", async () => {
   
   const { getByTestId, getByText } = render( <BubblePage/> );
 
-  await waitFor(() => {
-      getByText(/aliceblue/i);
-  });
+//   await waitFor(() => {
+//       getByText(/aliceblue/i);
+//   });
 
-  await wait();
+  await wait(
+      const domArray = [
+      "aliceblue","limegreen","aqua","aquamaring","lilac",
+      "softpink","bisque","softyellow","blanchedalmond",
+      "blue","blueviolet"]
+      
+       domArray.forEach( (color) => {
+       expect( getByTestId(color) ).toBeInTheDocument(); 
+    })  
+ 
+    fireEvent.click( getByText(/aliceblue/i));
+       expect( getByText(/edit color/i) ).toBeInTheDocument();
+  );
   
-  const domArray = [
-     "aliceblue","limegreen","aqua","aquamaring","lilac",
-     "softpink","bisque","softyellow","blanchedalmond",
-     "blue","blueviolet"]
-     
-      domArray.forEach( (color) => {
-      expect( getByTestId(color) ).toBeInTheDocument(); 
-   })  
-
-   fireEvent.click( getByText(/aliceblue/i));
-      expect( getByText(/edit color/i) ).toBeInTheDocument();
+ 
 });
